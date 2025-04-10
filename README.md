@@ -1,6 +1,6 @@
-# ML Project Template 🛠️
+# Applied ML Template 🛠️
 
-**Welcome to Machine Learning Practical!** This template is designed to streamline the development process and boost the quality of your code.
+**Welcome to Applied Machine Learning!** This template is designed to streamline the development process and boost the quality of your code.
 
 Before getting started with your projects, we encourage you to carefully read the sections below and familiarise yourselves with the proposed tools.
 
