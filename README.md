@@ -23,7 +23,7 @@ Make sure you have the following software and tools installed:
 2. Clone your fork locally.
 3. Configure a remote pointing to the upstream repository to sync changes between your fork and the original repository.
    ```bash
-   git remote add upstream https://github.com/alina-dima/mlp-template.git
+   git remote add upstream https://github.com/ivopascal/Applied-ML-Template
    ```
    **Don't skip this step.** We might update the original repository, so you should be able to easily pull our changes.
    
