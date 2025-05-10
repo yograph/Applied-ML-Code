@@ -7,7 +7,7 @@ ENV_NAME="yolox"
 PYTHON_VER="3.8"
 if ! conda info --envs | grep -q "^${ENV_NAME}[[:space:]]"; then
   conda create -n "$ENV_NAME" python="$PYTHON_VER" -y
-fi
+if
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$ENV_NAME"
 
