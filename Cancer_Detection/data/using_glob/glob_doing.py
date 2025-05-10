@@ -8,8 +8,8 @@ import matplotlib.patches as patches
 KAGGLE = True
 
 class GLOB_USAGE:
-    OUTPUT_RECT_DIR  = "output/rectangles"
-    OUTPUT_FINAL_DIR = "output/final"
+    OUTPUT_RECT_DIR  = "../Cancer_Detection/data/dataset_images/rsna-mammography-images-as-pngs/images_as_pngs_1024/train_images_processed_1024/*/*"
+    OUTPUT_FINAL_DIR = "../Cancer_Detection/data/dataset_images/rsna-mammography-images-as-pngs/images_as_pngs_1024/train_images_processed_1024/*/*"
 
     def __init__(self):
         if KAGGLE:
