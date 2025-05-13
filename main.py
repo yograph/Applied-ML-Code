@@ -1,8 +1,5 @@
-# This is a sample Python script.
-
-def hello_world():
-    return "Hello, World!"
+"""
+This is the code for the 
 
 
-if __name__ == '__main__':
-    hello_world()
+"""
