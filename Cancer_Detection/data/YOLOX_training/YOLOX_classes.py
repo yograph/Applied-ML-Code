@@ -1,8 +1,3 @@
-"""
-This is for the dependencies of the yolox
-"""
-KAGGLE = True
-
 !git clone https://github.com/roboflow-ai/YOLOX.git %cd YOLOX
 !pip3 install -U pip && pip3 install -r requirements.txt
 !pip3 install -v -e . 
