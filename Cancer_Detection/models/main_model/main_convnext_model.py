@@ -119,6 +119,9 @@ class FullTrainingOfModel(Creating_Convnet):
 
     def evaluate_models(self):
         """Run ExtendedEvaluation on validation and test sets for each model and store results, returning metrics dict."""
+
+        #### Add some more evaluations, even if it doesn't make sense, You can discard them
+        #### As you please later on.
         for name, model in self.models.items():
             results = {}
             for split, loader in [('val', self.val_loader), ('test', self.test_loader)]:
