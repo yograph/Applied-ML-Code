@@ -17,6 +17,9 @@ Cancer_Detection/data/train_images/
 Cancer_Detection/data/validation_images/
 Cancer_Detection/data/YOLOX/
 Cancer_Detection/data/YOLOX_training/
-
+Cancer_Detection/data/validation_images/
+Cancer_Detection/DICOMFILES
+Cancer_Detection/data/images_png
+Cancer_Detection/data/test_images
 # Ignore all PNG images everywhere
 *.png
