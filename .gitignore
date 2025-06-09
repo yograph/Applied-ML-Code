@@ -1,6 +1,22 @@
+# Lockfiles, IDE & env
 Pipfile.lock
-.idea
+.idea/
 __pycache__/
 .DS_Store
 venv/
 .env
+
+# Model weights
+Cancer_Detection/models/main_model/model_weights/
+
+# Data directories
+Cancer_Detection/data/csv_file/
+Cancer_Detection/data/dataset_images/
+Cancer_Detection/data/text_files/
+Cancer_Detection/data/train_images/
+Cancer_Detection/data/validation_images/
+Cancer_Detection/data/YOLOX/
+Cancer_Detection/data/YOLOX_training/
+
+# Ignore all PNG images everywhere
+*.png
