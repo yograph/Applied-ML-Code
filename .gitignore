@@ -10,16 +10,18 @@ venv/
 Cancer_Detection/models/main_model/model_weights/
 
 # Data directories
-Cancer_Detection/data/csv_file/
-Cancer_Detection/data/dataset_images/
-Cancer_Detection/data/text_files/
-Cancer_Detection/data/train_images/
-Cancer_Detection/data/validation_images/
-Cancer_Detection/data/YOLOX/
-Cancer_Detection/data/YOLOX_training/
-Cancer_Detection/data/validation_images/
+Cancer_Detection/main_model/data/csv_file/
+Cancer_Detection/main_model/data/dataset_images/
+Cancer_Detection/main_model/data/text_files/
+Cancer_Detection/main_model/data/train_images/
+Cancer_Detection/main_model/data/validation_images/
+Cancer_Detection/main_model/data/YOLOX/
+Cancer_Detection/main_model/data/YOLOX_training/
+Cancer_Detection/main_model/data/validation_images/
 Cancer_Detection/DICOMFILES
-Cancer_Detection/data/images_png
-Cancer_Detection/data/test_images
+Cancer_Detection/main_model/data/images_png
+Cancer_Detection/main_model/data/test_images
 # Ignore all PNG images everywhere
 *.png
+*.pth
+Cancer_Detection/main_model/data/main.csv
