@@ -1,2 +1,0 @@
-Here, we use glob instead of YOLOX. This is another way of cropping the image.
-We will do this to see which one is the best for images.
