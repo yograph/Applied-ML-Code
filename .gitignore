@@ -20,7 +20,8 @@ Cancer_Detection/main_model/data/YOLOX_training/
 Cancer_Detection/main_model/data/validation_images/
 Cancer_Detection/DICOMFILES
 Cancer_Detection/main_model/data/images_png
-Cancer_Detection/main_model/data/test_images
+Cancer_Detection/main_model/data/predictions/
+Cancer_Detection/main_model/data/test_images/
 # Ignore all PNG images everywhere
 *.png
 *.pth
