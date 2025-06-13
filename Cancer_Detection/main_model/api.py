@@ -35,8 +35,8 @@ def load_models(num_classes: int, device: torch.device) -> list:
     Returns:
         List of loaded ConvNeXt-small models.
     """
-    base = Path(__file__).parent / 'model_weights'
-    weights = [base / f"model_{i}_best.pth" for i in range(3)]
+    base = Path(__file__).parent / 'main_model' / 'data/model_weights'
+    weights = [base / "checkpoint.pth", base / "convenext_final.pth", base / "convenext_final_1.pth", base / "convenext_focal_resampled.pth"]
     cls = []
     for w in weights:
         model = convnext_small(pretrained=False)

@@ -54,6 +54,5 @@ def flatten_and_prefix(root_dir: str):
         shutil.rmtree(sub)
 
 if __name__ == "__main__":
-    flatten_and_prefix("train_images_processed_512")
-    flatten_and_prefix("images_png")
+    flatten_and_prefix("output")
     print("All images moved and renamed. Subfolders removed.")

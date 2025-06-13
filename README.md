@@ -57,9 +57,12 @@ This project focuses on breast cancer detection using machine learning technique
    - Use `test_models.py` to evaluate trained models on test data.
 
 4. **Deployment**:
+   - install the requirements
+   - this code is just so that you can train the code and test it
    - Deploy models using `api.py` with FastAPI.
    - Start the server with:
      ```sh
      uvicorn api:app --reload --port 8000
      ```
+   - To deploy the model, use the second script
 

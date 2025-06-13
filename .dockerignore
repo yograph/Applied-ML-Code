@@ -1,0 +1,30 @@
+# Lockfiles, IDE & env
+Pipfile.lock
+.idea/
+__pycache__/
+.DS_Store
+venv/
+.env
+
+# Model weights
+Cancer_Detection/models/main_model/model_weights/
+
+# Data directories
+Cancer_Detection/main_model/data/csv_file/
+Cancer_Detection/main_model/data/dataset_images/
+Cancer_Detection/main_model/data/text_files/
+Cancer_Detection/main_model/data/train_images/
+Cancer_Detection/main_model/data/validation_images/
+Cancer_Detection/main_model/data/YOLOX/
+Cancer_Detection/main_model/data/YOLOX_training/
+Cancer_Detection/DICOMFILES
+Cancer_Detection/main_model/data/images_png
+Cancer_Detection/main_model/data/predictions/
+Cancer_Detection/main_model/data/test_images/
+
+# Ignore all PNG images and PyTorch weights everywhere
+*.png
+*.pth
+
+# Main CSV
+Cancer_Detection/main_model/data/main.csv
