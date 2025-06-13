@@ -35,13 +35,24 @@ HISTORY = {
 }
 # ─────────────────────────────────────────────────────────────────────────
 
-def load_test_data():
+def load_test_data() -> tuple:
+    """
+    Load the test data from the CSV file and return true labels and predicted scores.
+    Returns:
+        tuple: (numpy array of true labels, numpy array of predicted scores)
+    """
     df = pd.read_csv(TEST_CSV_PATH)
     y_true   = df[TRUE_LABEL_COL].values
     y_scores = df[SCORE_COL].values
     return y_true, y_scores
 
-def plot_roc(y_true, y_scores):
+def plot_roc(y_true: np.ndarray, y_scores: np.ndarray) -> None:
+    """
+    Plot the Receiver Operating Characteristic (ROC) curve and calculate AUC.
+    Args:
+        y_true (np.ndarray): True binary labels.
+        y_scores (np.ndarray): Predicted scores or probabilities.
+    """
     fpr, tpr, _ = roc_curve(y_true, y_scores)
     roc_auc      = auc(fpr, tpr)
 
@@ -55,7 +66,13 @@ def plot_roc(y_true, y_scores):
     plt.tight_layout()
     plt.show()
 
-def plot_pr(y_true, y_scores):
+def plot_pr(y_true: np.ndarray, y_scores: np.ndarray) -> None:
+    """
+    Plot the Precision–Recall curve and calculate AUC.
+    Args:
+        y_true (np.ndarray): True binary labels.
+        y_scores (np.ndarray): Predicted scores or probabilities.
+    """
     precision, recall, _ = precision_recall_curve(y_true, y_scores)
     pr_auc               = auc(recall, precision)
     prevalence           = np.mean(y_true)
@@ -71,7 +88,14 @@ def plot_pr(y_true, y_scores):
     plt.tight_layout()
     plt.show()
 
-def plot_confusion(y_true, y_scores, threshold=0.5):
+def plot_confusion(y_true: np.ndarray, y_scores: np.ndarray, threshold=0.5) -> None:
+    """
+    Plot the confusion matrix for a given threshold.
+    Args:
+        y_true (np.ndarray): True binary labels.
+        y_scores (np.ndarray): Predicted scores or probabilities.
+        threshold (float): Threshold to convert scores to binary predictions.
+    """
     y_pred = (y_scores >= threshold).astype(int)
     cm     = confusion_matrix(y_true, y_pred)
 
@@ -92,7 +116,12 @@ def plot_confusion(y_true, y_scores, threshold=0.5):
     plt.tight_layout()
     plt.show()
 
-def plot_loss(history):
+def plot_loss(history: dict) -> None:
+    """
+    Plot the training and validation loss curves from hard-coded history.
+    Args:
+        history (dict): Dictionary containing 'loss' and 'val_loss' lists.
+    """
     epochs = np.arange(1, len(history['loss'])+1)
     plt.figure()
     plt.plot(epochs, history['loss'],     marker='o', label='Train Loss')

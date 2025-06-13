@@ -1,3 +1,15 @@
+"""
+This script merges three CSV files related to breast cancer detection,
+binarizes the BI-RADS scores, and sets the study_id to patient_id.
+It performs the following steps:
+1. Load the CSV files.
+2. Binarize the BI-RADS scores into a new column.
+3. Merge the first two CSVs on study_id, image_id, and birads.
+4. Rename patient_id to study_id in the third CSV.
+5. Merge the resulting DataFrame with the third CSV on image_id.
+6. Overwrite the study_id with patient_id.
+"""
+
 import pandas as pd
 from pathlib import Path
 
@@ -15,6 +27,14 @@ df3 = pd.read_csv(csv3_path, dtype={'image_id': str})
 
 # 2) Binarize BI-RADS → new 'birads' column
 def binarize_birads(df):
+    """
+    Binarizes the 'breast_birads' column in the DataFrame.
+    If the BI-RADS score is 4 or higher, it sets 'birads' to 1, otherwise 0.
+    Args:
+        df (pd.DataFrame): DataFrame containing 'breast_birads' column.
+    Returns:
+        pd.DataFrame: DataFrame with a new 'birads' column and 'breast_birads' dropped.
+    """
     df = df.copy()
     df['birads'] = (
         df['breast_birads']

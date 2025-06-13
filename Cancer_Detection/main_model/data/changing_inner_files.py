@@ -1,3 +1,9 @@
+"""
+This script flattens the directory structure of images by moving all images
+from numbered subfolders into a single root directory, renaming them to include
+the original folder name as a prefix, and then deleting the now-empty subfolders.
+"""
+
 import shutil
 from pathlib import Path
 

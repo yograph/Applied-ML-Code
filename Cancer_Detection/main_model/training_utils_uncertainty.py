@@ -31,11 +31,21 @@ from tqdm.auto import tqdm
 
 # --- Loss: Focal + Class Weight ---
 class FocalLossWithClassWeight(nn.Module):
+    """
+    Focal Loss with class weights for imbalanced binary classification.
+    """
     def __init__(self,
                  alpha: float = 0.25,
                  gamma: float = 2.0,
                  class_weight: torch.Tensor = None,
                  reduction: str = "mean"):
+        """
+        Args:
+            alpha (float): Weighting factor for positive class.
+            gamma (float): Focusing parameter to reduce loss for well-classified examples.
+            class_weight (torch.Tensor): Class weights for positive and negative classes.
+            reduction (str): Reduction method - 'mean', 'sum', or 'none'.
+        """
         super().__init__()
         self.alpha = alpha
         self.gamma = gamma
@@ -44,6 +54,13 @@ class FocalLossWithClassWeight(nn.Module):
         self.bce = nn.BCEWithLogitsLoss(reduction="none")
 
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            logits (torch.Tensor): Raw logits from model (shape [N, 1]).
+            targets (torch.Tensor): Binary targets (shape [N, 1]).
+        Returns:
+            torch.Tensor: Computed focal loss.
+        """
         ce = self.bce(logits, targets)
         p = torch.sigmoid(logits)
         p_t = p * targets + (1 - p) * (1 - targets)
@@ -172,7 +189,14 @@ def process_image(img_path, img_size=512):
         resized = cv2.resize(img, (img_size, img_size))
         return Image.fromarray(cv2.merge([resized, resized, resized]))
 # --- Data and Labels ---
-def get_data_paths_and_labels():
+def get_data_paths_and_labels() -> tuple:
+    """
+    Collects image paths and labels from two datasets:
+    - Dataset 1: Breast-level annotations with BIRADS scores.
+    - Dataset 2: Original cancer labels.
+    Returns:
+        tuple: (list of image paths, numpy array of labels)
+    """
     base = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(base, 'data')
     csv_dir = os.path.join(data_dir, 'csv_file')
@@ -208,15 +232,36 @@ def get_data_paths_and_labels():
 
 # --- Dataset ---
 class BreastCancerDataset(Dataset):
-    def __init__(self, paths, labels, transform=None):
+    """
+    Custom Dataset for breast cancer images.
+    Args:
+        paths (list): List of image file paths.
+        labels (list): List of corresponding labels (0 or 1).
+        transform (callable, optional): Transform to apply to images.
+    """
+    def __init__(self, paths: list, labels: list, transform=None) -> None:
+        """
+        Args:
+            paths (list): List of image file paths.
+            labels (list): List of corresponding labels (0 or 1).
+        transform (callable, optional): Transform to apply to images.
+        """
         self.paths = paths
         self.labels = labels
         self.transform = transform
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """Return the number of samples in the dataset."""
         return len(self.paths)
 
-    def __getitem__(self, i):
+    def __getitem__(self, i) -> tuple:
+        """
+        Get a single sample from the dataset.
+        Args:
+            i (int): Index of the sample.
+        Returns:
+            tuple: (image tensor, label tensor)
+        """
         img = process_image(self.paths[i])
         if self.transform:
             img = self.transform(img)

@@ -1,3 +1,9 @@
+"""
+# Cancer Detection using DenseNet201
+This script implements a cancer detection model using the DenseNet201 architecture.
+It processes DICOM images, applies data augmentation, and trains a binary classifier.
+"""
+
 import os
 import pandas as pd
 import numpy as np
@@ -35,7 +41,14 @@ else:
     print("No GPU detected (falling back to CPU)")
 
 # --- 1) Data‐gathering logic from your second script ---
-def get_data_paths_and_labels():
+def get_data_paths_and_labels() -> tuple:
+    """
+    Collects image paths and labels from two datasets:
+    - Dataset 1: Breast-level annotations with BIRADS scores.
+    - Dataset 2: Original cancer labels.
+    Returns:
+        tuple: (list of image paths, numpy array of labels)
+    """
     base = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(base, 'data')
     csv_dir = os.path.join(data_dir, 'csv_file')
@@ -139,7 +152,15 @@ base_model = DenseNet201(
 )
 base_model.trainable = False
 
-def build_model(backbone, lr=1e-4):
+def build_model(backbone: tf.keras.Model, lr=1e-4) -> tf.keras.Model:
+    """
+    Builds a model using the specified backbone and learning rate.
+    Args:
+        backbone (tf.keras.Model): Pre-trained backbone model.
+        lr (float): Learning rate for the optimizer.
+    Returns:
+        tf.keras.Model: Compiled model ready for training.
+    """
     inp = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
     x = backbone(inp, training=False)
     x = layers.GlobalAveragePooling2D()(x)

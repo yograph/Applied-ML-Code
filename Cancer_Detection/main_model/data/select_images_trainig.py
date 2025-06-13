@@ -45,6 +45,17 @@ IMG_EXTENSIONS       = {".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff"}
 # =======================
 
 def find_image_file(patient_id: str, image_id: str, img_dir: str) -> str:
+    """
+    Given a patient_id and image_id (both strings) and the directory to search,
+    try to locate a file named <patient_id>_<image_id> with any of the common extensions.
+    Returns the full path to the file if found, or None if not found.
+    
+    Args:
+        patient_id (str): The ID of the patient.
+        image_id (str): The ID of the image.
+        img_dir (str): The directory to search for the image file.
+    Returns:
+        str: Full path to the image file if found, otherwise None."""
     base = f"{patient_id}_{image_id}"
     for ext in IMG_EXTENSIONS:
         candidate = os.path.join(img_dir, base + ext)
@@ -56,11 +67,32 @@ def find_image_file(patient_id: str, image_id: str, img_dir: str) -> str:
     return None
 
 def make_patient_subfolder(base_dir: str, patient_id: str) -> str:
+    """
+    Create a subfolder for the given patient_id under base_dir.
+    If the folder already exists, it will not raise an error.
+    Returns the path to the created or existing folder.
+
+    Args:
+        base_dir (str): The base directory where patient subfolders will be created.
+        patient_id (str): The ID of the patient for whom the subfolder is created.
+    Returns:
+        str: The path to the created or existing patient subfolder.
+    """
     folder = os.path.join(base_dir, str(patient_id))
     os.makedirs(folder, exist_ok=True)
     return folder
 
 def load_and_unify_annotations() -> pd.DataFrame:
+    """
+    Load and unify annotations from breast-level and finding-level CSV files.
+    If both files exist, they are concatenated. If only one exists, it is used.
+    The resulting DataFrame contains columns for patient_id, image_id, and birads.
+    Returns:
+        pd.DataFrame: A DataFrame with columns 'patient_id', 'image_id', and 'birads'.
+    Raises:
+        FileNotFoundError: If neither CSV file exists.
+        KeyError: If the required columns are not present in the CSV files.
+    """
     dfs = []
     # breast‐level
     if os.path.isfile(BREAST_CSV):

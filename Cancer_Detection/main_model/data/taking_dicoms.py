@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+"""
+Script to filter BI-RADS 4 & 5 images, download DICOM files, convert them to PNG,
+and organize them into a training directory.
+It performs the following steps:
+1. Filter BI-RADS 4 & 5 study and image IDs from CSV files.
+2. Download the selected DICOM files ensuring all requested images exist.
+3. Convert DICOM files to PNG format, applying photometric corrections and resizing.
+4. Move the processed PNG files to a specified training directory.
+5. Clean up by removing the original DICOM files and empty directories.
+"""
+
 import os
 import subprocess
 import pandas as pd
@@ -17,6 +28,15 @@ import shutil
 # -------------------------
 
 def filter_birads(csv_dir: str, out_dir: str):
+    """
+    Filters BI-RADS 4 & 5 study and image IDs from the provided CSV files,
+    and saves the results to text files in the specified output directory.
+    Args:
+        csv_dir (str): Directory containing the CSV files.
+        out_dir (str): Directory to save the output text files.
+    Returns:
+        list: Paths to the output text files containing study and image IDs.
+    """
     os.makedirs(out_dir, exist_ok=True)
     # Load annotations
     df1 = pd.read_csv(os.path.join(csv_dir, 'breast-level_annotations.csv'))
@@ -40,6 +60,15 @@ def filter_birads(csv_dir: str, out_dir: str):
 # -------------------------
 
 def download_dicoms(list_files: list, download_dir: str, user: str, password: str):
+    """
+    Downloads DICOM files for the specified studies and images,
+    ensuring that all requested images exist in the download directory.
+    Args:
+        list_files (list): List of text files containing study_id and image_id pairs.
+        download_dir (str): Directory where DICOM files will be downloaded.
+        user (str): Username for authentication.
+        password (str): Password for authentication.
+    """
     os.makedirs(download_dir, exist_ok=True)
     BASE_URL = 'https://physionet.org/files/vindr-mammo/1.0.0/images'
     study_image_pairs = []
@@ -81,8 +110,24 @@ def download_dicoms(list_files: list, download_dir: str, user: str, password: st
 # -------------------------
 
 class DicomToPNGConverter:
+    """
+    Converts DICOM files to PNG format, applying photometric corrections and resizing.
+    This class handles the conversion of DICOM files to PNG images, ensuring that
+    existing PNG files are skipped. It uses parallel processing for efficiency.
+    """
     def __init__(self, parent_dir, save_dir, resize_to=512,
                  n_jobs=16, backend='loky', prefer='threads'):
+        """
+        Initialize the DICOM to PNG converter.
+
+        Args:
+            parent_dir (str): Base directory containing DICOM files.
+            save_dir (str): Directory where processed PNG images will be saved.
+            resize_to (int): Target size for the longer side of the image.
+            n_jobs (int): Number of parallel jobs to run.
+            backend (str): Joblib backend to use for parallel processing.
+            prefer (str): Joblib prefer setting for parallel processing.
+        """
         self.parent_dir = parent_dir
         self.save_dir = save_dir
         self.resize_to = resize_to
@@ -95,6 +140,17 @@ class DicomToPNGConverter:
         self.prefer = prefer
 
     def image_resize(self, image, width=None, height=None, inter=cv2.INTER_LINEAR):
+        """
+        Resize an image while maintaining aspect ratio.
+
+        Args:
+            image (np.ndarray): Input image to resize.
+            width (int, optional): Desired width of the resized image.
+            height (int, optional): Desired height of the resized image.
+            inter (int): Interpolation method to use for resizing.
+        Returns:
+            np.ndarray: Resized image.
+        """
         h, w = image.shape[:2]
         if width is None and height is None:
             return image
@@ -107,12 +163,28 @@ class DicomToPNGConverter:
         return cv2.resize(image, dim, interpolation=inter)
 
     def apply_window(self, img, center, width):
+        """
+        Apply a windowing operation to the image based on center and width.
+        Args:
+            img (np.ndarray): Input image to apply windowing.
+            center (float): Center value for the window.
+            width (float): Width of the window.
+        Returns:
+            np.ndarray: Windowed image normalized to [0, 1].
+        """
         mn = center - width/2
         mx = center + width/2
         img = np.clip(img, mn, mx)
         return (img - mn) / (mx - mn)
 
     def dicom_to_array(self, path: Path):
+        """
+        Read a DICOM file, apply photometric corrections, windowing, and resize.
+        Args:
+            path (Path): Path to the DICOM file.
+        Returns:
+            np.ndarray: Processed image array in range [0, 255].
+        """
         dcm = dicomsdl.open(str(path))
         data = dcm.pixelData().astype(np.float32)
         photo = dcm.getPixelDataInfo()['PhotometricInterpretation']
@@ -134,6 +206,11 @@ class DicomToPNGConverter:
         return (data * 255).astype(np.uint8)
 
     def process_file(self, path: Path):
+        """
+        Process a single DICOM file: convert to PNG, apply corrections, and save.
+        Args:
+            path (Path): Path to the DICOM file.
+        """
         try:
             rel = path.relative_to(self.parent_dir)
             out_path = Path(self.save_dir) / rel.with_suffix('.png')
@@ -147,6 +224,12 @@ class DicomToPNGConverter:
             self.fail_counter['fail'] += 1
 
     def run(self):
+        """
+        Run the conversion process in parallel for all DICOM files.
+        This method processes each DICOM file, converting it to PNG format,
+        applying necessary corrections, and saving it to the specified directory.
+        It uses joblib's Parallel to handle multiple files concurrently.
+        """
         Parallel(n_jobs=self.n_jobs, backend=self.backend, prefer=self.prefer)(
             delayed(self.process_file)(p) for p in tqdm(self.all_files)
         )

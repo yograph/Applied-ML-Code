@@ -1,3 +1,9 @@
+"""
+This script processes DICOM files into PNG images.
+It reads DICOM files, applies photometric corrections, windowing, and resizing,
+and saves the processed images in JPEG2000 format.
+"""
+
 import os
 from pathlib import Path
 from collections import Counter

@@ -29,7 +29,7 @@ WEIGHTS_DIR = Path(__file__).resolve().parent / "model_weights"
 NUM_CLASSES = 2
 # ─────────────────────────────────────────────────────────────────────────────
 
-def load_class_model(weights_path, num_classes, device):
+def load_class_model(weights_path: str, num_classes: int, device: torch.device) -> torch.nn.Module:
     """
     Instantiate a ConvNeXt-small, adjust its head to `num_classes`, then load matching weights.
     """
@@ -51,7 +51,7 @@ def load_class_model(weights_path, num_classes, device):
     return model
 
 
-def classify_crop(crop, models, transform, device):
+def classify_crop(crop: np.ndarray, models: list, transform: torch.nn.Module, device: torch.device) -> list:
     """
     Given a NumPy‐array crop (H×W×C, BGR), run each model in `models` on it,
     then return a list of per‐model probability vectors (length=num_classes).

@@ -26,7 +26,15 @@ from models.main_model.roi_extract import (
 app = FastAPI(title="ROI Classifier API")
 
 # load models once at startup
-def load_models(num_classes, device):
+def load_models(num_classes: int, device: torch.device) -> list:
+    """
+    Load pre-trained ConvNeXt-small models for classification.
+    Args:
+        num_classes (int): Number of output classes.
+        device (torch.device): Device to load the models on (CPU or GPU).
+    Returns:
+        List of loaded ConvNeXt-small models.
+    """
     base = Path(__file__).parent / 'model_weights'
     weights = [base / f"model_{i}_best.pth" for i in range(3)]
     cls = []

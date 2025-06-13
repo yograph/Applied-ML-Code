@@ -1,3 +1,8 @@
+"""
+This module extends the Creating_Convnet class to implement a full training pipeline
+for multiple ConvNet models, including training, saving/loading weights,
+and comprehensive evaluation on validation and test datasets."""
+
 import os
 import torch
 import torch.nn as nn

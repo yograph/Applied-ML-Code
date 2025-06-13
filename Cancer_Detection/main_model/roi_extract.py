@@ -6,7 +6,15 @@ Place at `models/main_model/roi_extract.py`.
 import cv2
 import numpy as np
 
-def extract_roi_otsu(gray: np.ndarray, gkernel=(5, 5)):
+def extract_roi_otsu(gray: np.ndarray, gkernel=(5, 5)) -> tuple:
+    """
+    Extracts the region of interest (ROI) using Otsu's method.
+    Args:
+        gray (np.ndarray): Grayscale image.
+        gkernel (tuple): Kernel size for Gaussian blur, default is (5, 5).
+    Returns:
+        tuple: Bounding box coordinates (x1, y1, x2, y2) and area percentage.
+    """
     h, w = gray.shape
     up = np.percentile(gray, 95)
     gray_clipped = np.where(gray > up, gray.min(), gray).astype(np.uint8)
@@ -26,7 +34,16 @@ def extract_roi_otsu(gray: np.ndarray, gkernel=(5, 5)):
     x,y,ww,hh = cv2.boundingRect(c)
     return (x, y, x+ww, y+hh), area_pct
 
-def extract_roi_adaptive(gray: np.ndarray, block_size=51, C=5):
+def extract_roi_adaptive(gray: np.ndarray, block_size=51, C=5) -> tuple:
+    """
+    Extracts the region of interest (ROI) using adaptive thresholding.
+    Args:
+        gray (np.ndarray): Grayscale image.
+        block_size (int): Size of the neighborhood area for adaptive thresholding.
+        C (int): Constant subtracted from the mean or weighted mean.
+    Returns:
+        tuple: Bounding box coordinates (x1, y1, x2, y2) and area percentage.
+    """
     bw = cv2.adaptiveThreshold(gray, 255,
                                cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                cv2.THRESH_BINARY_INV,
@@ -44,7 +61,16 @@ def extract_roi_adaptive(gray: np.ndarray, block_size=51, C=5):
     x,y,ww,hh = cv2.boundingRect(c)
     return (x, y, x+ww, y+hh), area_pct
 
-def extract_roi_canny(gray: np.ndarray, low=50, high=150):
+def extract_roi_canny(gray: np.ndarray, low=50, high=150) -> tuple:
+    """
+    Extracts the region of interest (ROI) using Canny edge detection.
+    Args:
+        gray (np.ndarray): Grayscale image.
+        low (int): Lower threshold for Canny edge detection.
+        high (int): Upper threshold for Canny edge detection.
+    Returns:
+        tuple: Bounding box coordinates (x1, y1, x2, y2) and area percentage.
+    """
     edges = cv2.Canny(gray, low, high)
     kern = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
     dil = cv2.dilate(edges, kern, iterations=1)

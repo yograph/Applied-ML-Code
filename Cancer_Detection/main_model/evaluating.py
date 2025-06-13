@@ -1,3 +1,9 @@
+"""
+Extended Evaluation Toolkit for Imbalanced Classification
+This module provides an extended evaluation toolkit for imbalanced classification tasks.
+It computes a wide range of metrics and provides plotting utilities for model evaluation.
+"""
+
 import torch
 import torch.nn as nn
 import numpy as np
