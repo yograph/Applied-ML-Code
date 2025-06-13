@@ -28,9 +28,11 @@ if st.button("Run prediction"):
         resp.raise_for_status()
         data = resp.json()
         prob = data.get("probability_malignant")
+        uncertainty = data.get("uncertainty_entropy")
         if prob is None:
             st.error("API returned no probability.")
         else:
-            st.metric("Probability malignant", f"{prob:.2%}")
+            st.metric("Predictive uncertainty", f"{uncertainty:.2f}")
+            st.metric("Probability malignant", f"{prob:.2f}")
     except Exception as e:
         st.error(f"Prediction failed: {e}")

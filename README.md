@@ -66,3 +66,14 @@ This project focuses on breast cancer detection using machine learning technique
      ```
    - To deploy the model, use the second script
 
+5. **Trainig/Testing**:
+   - To run the training and testing, run the main.py andpass the arguments --mode and --dataset.
+
+**To run the code**: 
+   Run these 2 commands to run the docker
+   - docker-compose build --no-cache
+   - docker-compose up
+
+   Then run this command to run the streamlit app.
+   - http://localhost:8501
+   

@@ -5,6 +5,7 @@ from torchvision.models import convnext_small
 from torchvision import transforms
 from PIL import Image
 import io
+import math
 
 app = FastAPI(title="Cancer Detection API")
 
@@ -16,21 +17,15 @@ def load_model():
     if not WEIGHTS_PATH.exists():
         raise RuntimeError(f"Model file not found at {WEIGHTS_PATH}")
     ckpt = torch.load(str(WEIGHTS_PATH), map_location="cpu")
-    sd = ckpt.get("model_state_dict", ckpt)
+    sd   = ckpt.get("model_state_dict", ckpt)
 
-    # detect head size
-    head_keys = [
-        k for k, v in sd.items()
-        if v.ndim == 2 and v.shape[1] == 768 and "classifier" in k
-    ]
-    num_out = sd[head_keys[0]].shape[0] if head_keys else 2
+    head_keys = [k for k,v in sd.items()
+                 if v.ndim==2 and v.shape[1]==768 and "classifier" in k]
+    num_out   = sd[head_keys[0]].shape[0] if head_keys else 2
 
-    # build & load
     model = convnext_small(pretrained=False, num_classes=num_out)
-    filtered = {
-        k: v for k, v in sd.items()
-        if k in model.state_dict() and v.shape == model.state_dict()[k].shape
-    }
+    filtered = {k:v for k,v in sd.items()
+                if k in model.state_dict() and v.shape==model.state_dict()[k].shape}
     model.load_state_dict(filtered, strict=False)
     model.eval()
     return model
@@ -38,12 +33,10 @@ def load_model():
 model = load_model()
 
 preprocess = transforms.Compose([
-    transforms.Resize((224, 224)),
+    transforms.Resize((224,224)),
     transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-    ),
+    transforms.Normalize(mean=[0.485,0.456,0.406],
+                         std=[0.229,0.224,0.225]),
 ])
 
 @app.post("/predict")
@@ -53,11 +46,24 @@ async def predict(file: UploadFile = File(...)):
         img = Image.open(io.BytesIO(contents)).convert("RGB")
     except Exception:
         raise HTTPException(400, "Invalid image file")
+
     x = preprocess(img).unsqueeze(0)
     with torch.no_grad():
         out = model(x)
+        # Get malignant probability
         if out.shape[1] == 2:
-            prob = torch.softmax(out, dim=1)[0, 1].item()
+            p = torch.softmax(out, dim=1)[0,1].item()
         else:
-            prob = torch.sigmoid(out.squeeze(1)).item()
-    return {"probability_malignant": prob}
+            p = torch.sigmoid(out.squeeze(1)).item()
+
+    # Compute predictive entropy as an uncertainty measure
+    # H(p) = -[p log p + (1-p) log (1-p)]
+    eps = 1e-12
+    p_clamped = max(min(p, 1-eps), eps)
+    entropy = - (p_clamped * math.log(p_clamped) +
+                 (1-p_clamped) * math.log(1-p_clamped))
+
+    return {
+        "probability_malignant": p,
+        "uncertainty_entropy":    entropy
+    }
