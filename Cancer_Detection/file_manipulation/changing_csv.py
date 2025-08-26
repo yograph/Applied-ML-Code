@@ -13,12 +13,11 @@ It performs the following steps:
 import pandas as pd
 from pathlib import Path
 
-# ─── base directory & paths ─────────────────────────────────────────────────
+
 BASE      = Path.cwd()
 csv1_path = BASE / 'csv_file' / 'breast-level_annotations.csv'
 csv2_path = BASE / 'csv_file' / 'finding_annotations.csv'
 csv3_path = BASE / 'csv_file' / 'train.csv'   # contains patient_id
-# ─────────────────────────────────────────────────────────────────────────────
 
 # 1) Load CSVs
 df1 = pd.read_csv(csv1_path)
