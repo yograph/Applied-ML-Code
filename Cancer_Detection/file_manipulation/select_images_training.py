@@ -42,7 +42,7 @@ RANDOM_STATE         = 42
 
 IMG_EXTENSIONS       = {".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff"}
 
-# =======================
+
 
 def find_image_file(patient_id: str, image_id: str, img_dir: str) -> str:
     """

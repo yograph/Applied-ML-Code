@@ -38,7 +38,6 @@ from main_convnext_model import (
     default_device
 )
 
-# ────────────── EDIT THESE PATHS AS NEEDED ──────────────
 
 # Directory containing your test images (flat structure; labels from CSV)
 TEST_IMG_DIR   = "data/test_images"
@@ -53,8 +52,6 @@ MODEL_SAVE_DIR = "models/main_model/model_weights"
 # Directory to which we will write CSVs of predictions
 PREDICTIONS_OUTDIR = "models/main_model/predictions"
 os.makedirs(PREDICTIONS_OUTDIR, exist_ok=True)
-
-# ─────────────────────────────────────────────────────────
 
 def main():
     # 1) Device

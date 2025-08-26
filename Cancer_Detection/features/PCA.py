@@ -7,7 +7,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-# -------------------- PCA Lighting -----------------------
 class PCALighting(object):
     """
     AlexNet-style PCA lighting noise (on tensors in [0,1]).
@@ -35,7 +34,6 @@ class PCALighting(object):
             out[c, :, :] = out[c, :, :] + rgb[c]
         return torch.clamp(out, 0.0, 1.0)
 
-# -------------------- PCA Head (pure PyTorch) ------------
 @torch.no_grad()
 def gather_convnext_features(model: nn.Module, dataloader, device, max_samples=2000):
     """
@@ -82,7 +80,6 @@ def build_pca_linear(features: torch.Tensor, out_dim: int) -> nn.Linear:
             p.requires_grad = False
         return layer
 
-# -------------------- Uncertainty Metrics ----------------
 def predictive_stats(prob_samples: np.ndarray, eps: float = 1e-6):
     """
     prob_samples: shape [T, N] where T = #samples (MC-dropout and/or TTA)
@@ -101,7 +98,7 @@ def predictive_stats(prob_samples: np.ndarray, eps: float = 1e-6):
     MI = H - EH
     return dict(mean_prob=p_mean, var=p_var, entropy=H, expected_entropy=EH, mutual_info=MI)
 
-# -------------------- TTA helper -------------------------
+
 def tta_batch(x: torch.Tensor, t: int = 4):
     """
     Simple deterministic TTA variants (no randomness): identity, hflip, vflip, hvflip.
@@ -117,7 +114,7 @@ def tta_batch(x: torch.Tensor, t: int = 4):
     xs = (xs * reps)[:t]
     return xs
 
-# -------------------- Grad-CAM & Saliency ----------------
+
 class GradCAM:
     """
     Minimal Grad-CAM for ConvNeXt. Hooks activations/gradients from a chosen layer.
@@ -196,7 +193,7 @@ def overlay_heatmap(rgb_uint8: np.ndarray, heat01: np.ndarray, alpha: float = 0.
     overlay = (alpha * heat + (1 - alpha) * rgb_uint8.astype(np.float32)).clip(0, 255).astype(np.uint8)
     return overlay
 
-# -------------------- Saliency ---------------------------
+
 def saliency_map(model: nn.Module, x: torch.Tensor, target_index: int = 0):
     """
     Vanilla saliency: gradient of target logit wrt input.

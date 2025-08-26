@@ -52,7 +52,6 @@ RANDOM_STATE = 42
 # Common image extensions to try when locating files
 IMG_EXTENSIONS = [".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff"]
 
-# =======================
 
 def find_image_file(patient_id: str, image_id: str, img_dir: str):
     """

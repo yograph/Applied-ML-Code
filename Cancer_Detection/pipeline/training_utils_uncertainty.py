@@ -52,14 +52,14 @@ from features import (
     predictive_stats, tta_batch, GradCAM, upsample_like, overlay_heatmap, saliency_map
 )
 
-# -------------------- Reproducibility --------------------
+
 def set_seed(seed: int = 42):
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = False
     torch.backends.cudnn.benchmark = True
 
-# -------------------- Local fallbacks --------------------
+
 def _fallback_process_image(img_path, img_size=512):
     """Simple robust grayscale->3ch pipeline (fallback)."""
     import cv2, numpy as np
@@ -96,7 +96,7 @@ FocalLossWithClassWeight = _custom_focal if _custom_focal is not None else _Fall
 def process_image(img_path):
     return _custom_process_image(img_path) if _custom_process_image is not None else _fallback_process_image(img_path)
 
-# -------------------- Data -------------------------------
+
 def get_data_paths_and_labels(base_dir) -> tuple:
     """
     Expects:
@@ -150,7 +150,7 @@ class BreastCancerDataset(Dataset):
         if self.transform: img = self.transform(img)
         return img, torch.tensor(self.labels[i], dtype=torch.float32), self.paths[i]
 
-# -------------------- Model ------------------------------
+
 def build_model(dropout: float = 0.0, pca_layer: nn.Linear = None, pca_dim: int = 128):
     model = models.convnext_small(weights=ConvNeXt_Small_Weights.IMAGENET1K_V1)
     if pca_layer is not None:
@@ -171,7 +171,7 @@ def build_model(dropout: float = 0.0, pca_layer: nn.Linear = None, pca_dim: int 
         )
     return model
 
-# -------------------- Training / Eval helpers ------------
+
 def make_loaders(tr_paths, tr_labels, vl_paths, vl_labels, ts_paths, ts_labels,
                  batch_size, mean, std, pca_lighting=False, num_workers=4):
     train_tf_list = [
@@ -254,7 +254,7 @@ def select_best_threshold(y_true, y_prob, metric="fbeta", beta=1.0):
             best_val, best_thr = val, t
     return best_thr, best_val
 
-# -------------------- Pipeline ---------------------------
+
 class BCPipeline:
     def __init__(self, args):
         self.args = args
@@ -504,7 +504,7 @@ class BCPipeline:
             s_overlay = overlay_heatmap(img_rgb, s, alpha=0.35)
             cv2.imwrite(os.path.join(out_dir, f"{base}_saliency.jpg"), s_overlay[:, :, ::-1])
 
-# -------------------- CLI -------------------------------
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--base-dir", type=str, default=os.path.dirname(os.path.abspath(__file__)),

@@ -11,12 +11,11 @@ import torch
 from torchvision import datasets, transforms
 from models.main_model.training_utils import FullTrainingOfModel
 
-# ←── EDIT THIS PATH ──→ where to find your split data
+
 TRAIN_DATA_DIR = "data/train_images"
 VALID_DATA_DIR = "data/validation_images"
 TEST_DATA_DIR  = "data/test_images"
 
-# ←── EDIT THIS PATH ──→ where to save your model weights
 MODEL_SAVE_DIR = "models/main_model/model_weights"
 
 # 1) Define your transforms (must match what convnet_one expects)
